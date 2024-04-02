@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "TapeKotlin"
 include(":app")
- 
+include(":tape")
