@@ -2,6 +2,7 @@ plugins {
     id("java-library")
     alias(libs.plugins.jetbrainsKotlinJvm)
     alias(libs.plugins.serialization)
+    id("maven-publish")
 }
 
 java {
@@ -26,4 +27,18 @@ tasks.withType<Test> {
         "--add-exports", "java.base/jdk.internal.util=ALL-UNNAMED",
         "--add-exports", "java.base/sun.security.action=ALL-UNNAMED"
     )
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("tape-kt") {
+                from(components["release"])
+
+                groupId = "io.msvhora.github"
+                artifactId = "tape"
+                version = "1.0.0"
+            }
+        }
+    }
 }
