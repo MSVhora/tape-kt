@@ -89,7 +89,7 @@ internal class InMemoryObjectQueue<T> : ObjectQueue<T> {
         private var expectedModCount = modCount
 
         @Throws(ConcurrentModificationException::class)
-        override fun hasNext(): Boolean {
+        override operator fun hasNext(): Boolean {
             checkForComodification()
             return delegate.hasNext()
         }
@@ -98,7 +98,7 @@ internal class InMemoryObjectQueue<T> : ObjectQueue<T> {
             ConcurrentModificationException::class,
             IllegalStateException::class
         )
-        override fun next(): T {
+        override operator fun next(): T {
             check(!closed) { "closed" }
             checkForComodification()
             val next = delegate.next()

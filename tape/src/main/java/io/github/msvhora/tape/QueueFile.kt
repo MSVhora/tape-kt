@@ -96,7 +96,7 @@ class QueueFile internal constructor(
      * ...              Data
     </pre> *
      */
-    private val raf: RandomAccessFile
+    val raf: RandomAccessFile
 
     /**
      * Keep file around for error reporting.
@@ -126,7 +126,7 @@ class QueueFile internal constructor(
     /**
      * Cached file length. Always a power of 2.
      */
-    private var fileLength: Long = 0
+    var fileLength: Long = 0
 
     /**
      * Number of elements.
@@ -512,23 +512,30 @@ class QueueFile internal constructor(
         NoSuchElementException::class
     )
     suspend fun remove(n: Int = 1) {
+        mutex.lock()
+        require(n >= 0) { "Cannot remove negative ($n) number of elements." }
+        if (n == 0) {
+            mutex.unlock()
+            return
+        }
+        if (n == elementCount) {
+            mutex.unlock()
+            clear()
+            return
+        }
+        if (isEmpty) {
+            mutex.unlock()
+            throw NoSuchElementException()
+        }
+        if (n > elementCount) {
+            mutex.unlock()
+            throw IllegalArgumentException(
+                "Cannot remove more elements ($n) than present in queue ($elementCount)."
+            )
+        }
+        mutex.unlock()
+
         mutex.withLock {
-            require(n >= 0) { "Cannot remove negative ($n) number of elements." }
-            if (n == 0) {
-                return
-            }
-            if (n == elementCount) {
-                clear()
-                return
-            }
-            if (isEmpty) {
-                throw NoSuchElementException()
-            }
-            if (n > elementCount) {
-                throw IllegalArgumentException(
-                    "Cannot remove more elements ($n) than present in queue ($elementCount)."
-                )
-            }
             val eraseStartPosition: Long = first.position
             var eraseTotalLength: Long = 0
 
@@ -704,13 +711,13 @@ class QueueFile internal constructor(
          */
         private var nextElementPosition: Long = first.position
 
-        override fun hasNext(): Boolean {
+        override operator fun hasNext(): Boolean {
             if (closed) throw IllegalStateException("closed")
             return nextElementIndex != elementCount
         }
 
         @Throws(IOException::class)
-        override fun next(): ByteArray {
+        override operator fun next(): ByteArray {
             if (closed) throw IllegalStateException("closed")
             if (isEmpty) throw NoSuchElementException()
             if (nextElementIndex >= elementCount) throw NoSuchElementException()

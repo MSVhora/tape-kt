@@ -116,7 +116,7 @@ interface ObjectQueue<T> : Closeable {
         /**
          * Returns `true` if the iteration has more elements.
          */
-        fun hasNext(): Boolean
+        operator fun hasNext(): Boolean
 
         /**
          * Returns the next element in the iteration.
@@ -124,7 +124,7 @@ interface ObjectQueue<T> : Closeable {
          * @throws NoSuchElementException if the iteration has no next element.
          */
         @Throws(NoSuchElementException::class)
-        fun next(): T
+        operator fun next(): T
 
         /**
          * Removes from the underlying collection the last element returned by this iterator.

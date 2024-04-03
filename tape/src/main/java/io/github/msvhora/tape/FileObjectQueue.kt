@@ -109,12 +109,12 @@ internal class FileObjectQueue<T>(
 
     private inner class QueueFileIterator(val iterator: ObjectQueue.Iterator<ByteArray?>) :
         ObjectQueue.Iterator<T> {
-        override fun hasNext(): Boolean {
+        override operator fun hasNext(): Boolean {
             return iterator.hasNext()
         }
 
         @Throws(IOException::class)
-        override fun next(): T {
+        override operator fun next(): T {
             val data = iterator.next()
             return try {
                 converter.from(data)
