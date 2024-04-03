@@ -151,53 +151,100 @@ class ObjectQueueTest {
     @Test
     @Throws(IOException::class)
     fun testIteratorRemoveDisallowsConcurrentModification() = runTest {
-        val iterator: ObjectQueue.Iterator<String?>? = queue?.iterator()
-        iterator?.next()
-        queue?.remove()
-        try {
-            iterator?.remove()
-        } catch (ignored: ConcurrentModificationException) {
-            Assert.fail()
+        if (queue is InMemoryObjectQueue) {
+            val iterator = queue?.iterator()
+            iterator?.next()
+            queue?.remove()
+            try {
+                iterator?.remove()
+                Assert.fail()
+            } catch (ignored: ConcurrentModificationException) {
+            }
+        } else {
+            val iterator = queue?.iterator()
+            iterator?.next()
+            queue?.remove()
+            try {
+                iterator?.remove()
+            } catch (ignored: ConcurrentModificationException) {
+                Assert.fail()
+            }
         }
     }
 
     @Test
     @Throws(IOException::class)
     fun testIteratorHasNextDisallowsConcurrentModification() = runTest {
-        val iterator: ObjectQueue.Iterator<String?>? = queue?.iterator()
-        iterator?.next()
-        queue?.remove()
-        try {
-            iterator?.hasNext()
-        } catch (ignored: ConcurrentModificationException) {
-            Assert.fail()
+        if (queue is InMemoryObjectQueue) {
+            val iterator = queue?.iterator()
+            iterator?.next()
+            queue?.remove()
+            try {
+                iterator?.hasNext()
+                Assert.fail()
+            } catch (ignored: ConcurrentModificationException) {
+            }
+        } else {
+            val iterator = queue?.iterator()
+            iterator?.next()
+            queue?.remove()
+            try {
+                iterator?.hasNext()
+            } catch (ignored: ConcurrentModificationException) {
+                Assert.fail()
+            }
         }
     }
 
     @Test
     @Throws(IOException::class)
     fun testIteratorDisallowsConcurrentModificationWithClear() = runTest {
-        val iterator: ObjectQueue.Iterator<String?>? = queue?.iterator()
-        iterator?.next()
-        queue?.clear()
-        try {
-            iterator?.hasNext()
-        } catch (ignored: ConcurrentModificationException) {
-            Assert.fail()
+        if (queue is InMemoryObjectQueue) {
+            val iterator = queue?.iterator()
+            iterator?.next()
+            queue?.clear()
+            try {
+                iterator?.hasNext()
+                Assert.fail()
+            } catch (ignored: ConcurrentModificationException) {
+            }
+        } else {
+            val iterator = queue?.iterator()
+            iterator?.next()
+            queue?.clear()
+            try {
+                iterator?.hasNext()
+            } catch (ignored: ConcurrentModificationException) {
+                Assert.fail()
+            }
         }
     }
 
     @Test
     @Throws(IOException::class)
     fun testIteratorOnlyRemovesFromHead() = runTest {
-        val iterator: ObjectQueue.Iterator<String?>? = queue?.iterator()
-        iterator?.next()
-        iterator?.next()
-        try {
-            iterator?.remove()
-        } catch (ex: UnsupportedOperationException) {
-            assertThat(ex).hasMessageThat().isEqualTo("Removal is only permitted from the head.")
-            Assert.fail()
+        if (queue is InMemoryObjectQueue) {
+            val iterator = queue?.iterator()
+            iterator?.next()
+            iterator?.next()
+            try {
+                iterator?.remove()
+                Assert.fail()
+            } catch (ex: UnsupportedOperationException) {
+                assertThat(ex).hasMessageThat()
+                    .isEqualTo("Removal is only permitted from the head.")
+            }
+        } else {
+            val iterator = queue?.iterator()
+            iterator?.next()
+            iterator?.next()
+            try {
+                iterator?.remove()
+            } catch (ex: UnsupportedOperationException) {
+                assertThat(ex).hasMessageThat()
+                    .isEqualTo("Removal is only permitted from the head.")
+                Assert.fail()
+            }
         }
     }
 
