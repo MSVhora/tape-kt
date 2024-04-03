@@ -45,7 +45,7 @@ afterEvaluate {
 
                 groupId = "com.msvhora.github"
                 artifactId = "tape-kt"
-                version = "1.0.2"
+                version = "1.0.0"
             }
         }
     }
