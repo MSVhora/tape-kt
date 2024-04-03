@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("java-library")
     alias(libs.plugins.jetbrainsKotlinJvm)
@@ -6,8 +8,14 @@ plugins {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_1_8
+    }
 }
 
 dependencies {
@@ -37,7 +45,7 @@ afterEvaluate {
 
                 groupId = "com.msvhora.github"
                 artifactId = "tape-kt"
-                version = "1.0.1"
+                version = "1.0.2"
             }
         }
     }
