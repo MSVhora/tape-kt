@@ -33,7 +33,7 @@ afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("tape-kt") {
-                from(components["release"])
+                from(components["kotlin"])
 
                 groupId = "io.msvhora.github"
                 artifactId = "tape"
