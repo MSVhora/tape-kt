@@ -1,20 +1,10 @@
 // Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
-package io.github.msvhora.tape
-
-/**
- * Created by Murtuza Vhora(@msvhora) on 03,April,2024
- */
+package com.github.msvhora.tape
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.burst.BurstJUnit4
 import com.squareup.burst.annotation.Burst
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -24,34 +14,32 @@ import org.junit.runner.RunWith
 import java.io.File
 import java.io.IOException
 import java.io.OutputStream
-import java.util.UUID
-import kotlin.random.Random
 
 /**
- * Tests for Json Object Queue.
+ * This code is migrated from Java to Kotlin with its original logic intact.
  *
  * @author Murtuza Vhora (murtazavhora@gmail.com)
  */
 @RunWith(BurstJUnit4::class)
-class JsonObjectQueueTest {
+class ObjectQueueTest {
     @JvmField
     @Rule
     var folder = TemporaryFolder()
 
     @Burst
     var factory: QueueFactory? = null
-    private var queue: ObjectQueue<JsonData>? = null
+    private var queue: ObjectQueue<String>? = null
 
     @Before
     @Throws(IOException::class)
     fun setUp() = runTest {
         val parent = folder.getRoot()
-        val file = File(parent, "json-object-queue")
+        val file = File(parent, "object-queue")
         val queueFile: QueueFile = QueueFile.Builder(file).build()
-        queue = factory!!.create(queueFile, JsonConverter())
-        queue?.add(JsonData("one"))
-        queue?.add(JsonData("two"))
-        queue?.add(JsonData("three"))
+        queue = factory!!.create(queueFile, StringConverter())
+        queue?.add("one")
+        queue?.add("two")
+        queue?.add("three")
     }
 
     @Test
@@ -63,47 +51,39 @@ class JsonObjectQueueTest {
     @Test
     @Throws(IOException::class)
     fun peek() = runTest {
-        assertThat(queue?.peek()).isEqualTo(JsonData("one"))
+        assertThat(queue?.peek()).isEqualTo("one")
     }
 
     @Test
     @Throws(IOException::class)
     fun peekMultiple() = runTest {
-        assertThat(queue?.peek(2)).containsExactly(JsonData("one"), JsonData("two"))
+        assertThat(queue?.peek(2)).containsExactly("one", "two")
     }
 
     @Test
     @Throws(IOException::class)
     fun peekMaxCanExceedQueueDepth() = runTest {
-        assertThat(queue?.peek(6)).containsExactly(
-            JsonData("one"),
-            JsonData("two"),
-            JsonData("three")
-        )
+        assertThat(queue?.peek(6)).containsExactly("one", "two", "three")
     }
 
     @Test
     @Throws(IOException::class)
     fun asList() = runTest {
-        assertThat(queue?.asList()).containsExactly(
-            JsonData("one"),
-            JsonData("two"),
-            JsonData("three")
-        )
+        assertThat(queue?.asList()).containsExactly("one", "two", "three")
     }
 
     @Test
     @Throws(IOException::class)
     fun remove() = runTest {
         queue?.remove()
-        assertThat(queue?.asList()).containsExactly(JsonData("two"), JsonData("three"))
+        assertThat(queue?.asList()).containsExactly("two", "three")
     }
 
     @Test
     @Throws(IOException::class)
     fun removeMultiple() = runTest {
         queue?.remove(2)
-        assertThat(queue?.asList()).containsExactly(JsonData("three"))
+        assertThat(queue?.asList()).containsExactly("three")
     }
 
     @Test
@@ -125,13 +105,13 @@ class JsonObjectQueueTest {
     @Test
     @Throws(IOException::class)
     fun testIterator() = runTest {
-        val saw: MutableList<JsonData> = ArrayList()
+        val saw: MutableList<String> = ArrayList()
         queue?.let {
             for (pojo in it) {
                 saw.add(pojo)
             }
         }
-        assertThat(saw).containsExactly(JsonData("one"), JsonData("two"), JsonData("three"))
+        assertThat(saw).containsExactly("one", "two", "three")
     }
 
     @Test
@@ -166,10 +146,10 @@ class JsonObjectQueueTest {
         val iterator = queue?.iterator()
         iterator?.next()
         iterator?.remove()
-        assertThat(queue?.asList()).containsExactly(JsonData("two"), JsonData("three"))
+        assertThat(queue?.asList()).containsExactly("two", "three")
         iterator?.next()
         iterator?.remove()
-        assertThat(queue?.asList()).containsExactly(JsonData("three"))
+        assertThat(queue?.asList()).containsExactly("three")
     }
 
     @Test
@@ -280,7 +260,7 @@ class JsonObjectQueueTest {
         val queueFile: QueueFile = QueueFile.Builder(file).build()
         val queue = ObjectQueue.create(queueFile, object : ObjectQueue.Converter<Any> {
             @Throws(IOException::class)
-            override fun from(source: ByteArray): String {
+            override fun from(source: ByteArray): String? {
                 throw IOException()
             }
 
@@ -293,62 +273,6 @@ class JsonObjectQueueTest {
             Assert.fail()
         } catch (ioe: Exception) {
             assertThat(ioe).isInstanceOf(IOException::class.java)
-        }
-    }
-
-    @Test
-    @Throws(IOException::class)
-    fun testConcurrentAddRemoveElements() = runTest {
-        // This test ensures that we update 'first' correctly.
-        val max = 100
-        var addIndex = -1
-        var removeIndex = -1
-        queue?.clear()
-        (0..max).map {
-            if (Random.nextBoolean()) {
-                async {
-                    queue?.add(JsonData((++addIndex).toString()))
-                }
-            } else {
-                async {
-                    if (queue?.isEmpty() == false) {
-                        assertThat(queue?.peek()).isEqualTo(JsonData((++removeIndex).toString()))
-                        queue?.remove()
-                    }
-                }
-            }
-        }.awaitAll()
-    }
-
-    @Test
-    @Throws(IOException::class)
-    fun testConcurrentAddFlushElements() = runTest {
-        val max = 100000
-        val batchSize = 20
-        val delayInMilliseconds = 20000L
-
-        // Flush Elements after 2s
-        val job = async {
-            while (true) {
-                delay(delayInMilliseconds)
-                while (true) {
-                    val size = queue?.size() ?: 0
-                    if (size == 0) {
-                        break
-                    }
-                    queue?.remove(minOf(size, batchSize))
-                }
-                assertThat(queue?.isEmpty()).isTrue()
-            }
-        }
-        job.start()
-        (0..max).map {
-            async {
-                queue?.add(JsonData(it.toString()))
-                if (it == max) {
-                    job.cancel()
-                }
-            }
         }
     }
 
@@ -378,65 +302,14 @@ class JsonObjectQueueTest {
         ): ObjectQueue<T>?
     }
 
-    @Serializable
-    internal data class JsonData(
-        @SerialName("value")
-        val value: String,
-        @SerialName("id")
-        val id: String = UUID.randomUUID().toString(),
-        @SerialName("list")
-        val list: List<String> = listOf(
-            "one",
-            "two",
-            "three",
-            "four",
-            "five",
-        ),
-        val intData: Int = -1,
-        val longData: Long = 0L,
-        val floatData: Float = 0f,
-        val doubleData: Double = 0.0,
-    ) {
-        override fun equals(other: Any?): Boolean {
-            return other is JsonData
-                    && other.value == this.value
-                    && other.list == list
-                    && other.intData == intData
-                    && other.longData == longData
-                    && other.floatData == floatData
-                    && other.doubleData == doubleData
-        }
-
-        override fun hashCode(): Int {
-            var result = value.hashCode()
-            result = 31 * result + id.hashCode()
-            return result
-        }
-    }
-
-    internal class JsonConverter : ObjectQueue.Converter<JsonData> {
-        private val json = Json
-
+    internal class StringConverter : ObjectQueue.Converter<String> {
         @Throws(IOException::class)
-        override fun from(source: ByteArray): JsonData? {
-            return try {
-                json
-                    .decodeFromString(
-                        deserializer = JsonData.serializer(),
-                        string = source.decodeToString()
-                    )
-            } catch (e: Exception) {
-                null
-            }
+        override fun from(source: ByteArray): String {
+            return String(source, charset("UTF-8"))
         }
 
-        override fun toStream(value: JsonData, sink: OutputStream) {
-            val jsonString = json
-                .encodeToString(
-                    serializer = JsonData.serializer(),
-                    value = value
-                )
-            jsonString.toByteArray(charset("UTF-8")).let { sink.write(it) }
+        override fun toStream(value: String, sink: OutputStream) {
+            value.toByteArray(charset("UTF-8")).let { sink.write(it) }
         }
     }
 }

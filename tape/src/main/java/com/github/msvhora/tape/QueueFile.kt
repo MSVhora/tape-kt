@@ -16,9 +16,9 @@
 // Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
 @file:Suppress("KDocUnresolvedReference", "SameParameterValue")
 
-package io.github.msvhora.tape
+package com.github.msvhora.tape
 
-import io.github.msvhora.tape.QueueFile.Builder
+import com.github.msvhora.tape.QueueFile.Builder
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.io.Closeable

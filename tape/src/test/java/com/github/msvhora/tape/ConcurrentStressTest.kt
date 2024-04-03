@@ -1,5 +1,5 @@
 // Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
-package io.github.msvhora.tape
+package com.github.msvhora.tape
 
 import com.squareup.burst.BurstJUnit4
 import kotlinx.coroutines.test.runTest

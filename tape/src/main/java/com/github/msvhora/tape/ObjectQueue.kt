@@ -1,6 +1,6 @@
 // Copyright 2011 Square, Inc.
 // Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
-package io.github.msvhora.tape
+package com.github.msvhora.tape
 
 import java.io.Closeable
 import java.io.IOException

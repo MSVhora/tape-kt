@@ -35,9 +35,9 @@ afterEvaluate {
             create<MavenPublication>("tape-kt") {
                 from(components["kotlin"])
 
-                groupId = "io.msvhora.github"
-                artifactId = "tape"
-                version = "1.0.0"
+                groupId = "com.msvhora.github"
+                artifactId = "tape-kt"
+                version = "1.0.1"
             }
         }
     }

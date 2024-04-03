@@ -1,6 +1,6 @@
 // Copyright 2010 Square, Inc.
 // Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
-package io.github.msvhora.tape
+package com.github.msvhora.tape
 
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest

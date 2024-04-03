@@ -1,5 +1,5 @@
 // Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
-package io.github.msvhora.tape
+package com.github.msvhora.tape
 
 /**
  * Created by Murtuza Vhora(@msvhora) on 02,April,2024

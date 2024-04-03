@@ -2,7 +2,7 @@
 // Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
 @file:Suppress("KDocUnresolvedReference")
 
-package io.github.msvhora.tape
+package com.github.msvhora.tape
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

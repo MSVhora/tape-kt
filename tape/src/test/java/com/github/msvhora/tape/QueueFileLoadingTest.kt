@@ -1,13 +1,13 @@
 // Copyright 2012 Square, Inc.
 // Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
-package io.github.msvhora.tape
+package com.github.msvhora.tape
 
-import io.github.msvhora.tape.QueueTestUtils.Companion.EMPTY_SERIALIZED_QUEUE
-import io.github.msvhora.tape.QueueTestUtils.Companion.FRESH_SERIALIZED_QUEUE
-import io.github.msvhora.tape.QueueTestUtils.Companion.ONE_ENTRY_SERIALIZED_QUEUE
-import io.github.msvhora.tape.QueueTestUtils.Companion.TRUNCATED_EMPTY_SERIALIZED_QUEUE
-import io.github.msvhora.tape.QueueTestUtils.Companion.TRUNCATED_ONE_ENTRY_SERIALIZED_QUEUE
-import io.github.msvhora.tape.QueueTestUtils.Companion.copyTestFile
+import com.github.msvhora.tape.QueueTestUtils.Companion.EMPTY_SERIALIZED_QUEUE
+import com.github.msvhora.tape.QueueTestUtils.Companion.FRESH_SERIALIZED_QUEUE
+import com.github.msvhora.tape.QueueTestUtils.Companion.ONE_ENTRY_SERIALIZED_QUEUE
+import com.github.msvhora.tape.QueueTestUtils.Companion.TRUNCATED_EMPTY_SERIALIZED_QUEUE
+import com.github.msvhora.tape.QueueTestUtils.Companion.TRUNCATED_ONE_ENTRY_SERIALIZED_QUEUE
+import com.github.msvhora.tape.QueueTestUtils.Companion.copyTestFile
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.After
