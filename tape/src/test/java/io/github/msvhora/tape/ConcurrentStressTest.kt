@@ -1,3 +1,4 @@
+// Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
 package io.github.msvhora.tape
 
 import com.squareup.burst.BurstJUnit4
@@ -23,6 +24,11 @@ import java.util.UUID
  * Created by Murtuza Vhora(@msvhora) on 03,April,2024
  */
 
+/**
+ * Concurrent Stress Test and Model Test using Lincheck
+ *
+ * @author Murtuza Vhora (murtazavhora@gmail.com)
+ */
 @RunWith(BurstJUnit4::class)
 class ConcurrentStressTest {
     @JvmField

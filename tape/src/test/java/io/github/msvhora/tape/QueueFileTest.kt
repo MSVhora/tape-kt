@@ -1,4 +1,5 @@
 // Copyright 2010 Square, Inc.
+// Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
 package io.github.msvhora.tape
 
 import com.google.common.truth.Truth.assertThat
@@ -20,6 +21,11 @@ import java.util.ArrayDeque
 import java.util.Queue
 import java.util.logging.Logger
 
+/**
+ * This code is migrated from Java to Kotlin with its original logic intact.
+ *
+ * @author Murtuza Vhora (murtazavhora@gmail.com)
+ */
 /**
  * Tests for QueueFile.
  *

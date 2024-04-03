@@ -13,6 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+// Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
 @file:Suppress("KDocUnresolvedReference", "SameParameterValue")
 
 package io.github.msvhora.tape
@@ -27,6 +28,13 @@ import java.io.IOException
 import java.io.RandomAccessFile
 import kotlin.math.min
 
+/**
+ * This code is migrated from Java to Kotlin with its original logic intact.
+ * Suspend functionality is added to support Kotlin coroutines.
+ * Mutex is added to reduce file corruption and concurrent access to resource.
+ *
+ * @author Murtuza Vhora (murtazavhora@gmail.com)
+ */
 /**
  * A reliable, efficient, file-based, FIFO queue. Additions and removals are O(1). All operations
  * are atomic. Writes are synchronous; data will be written to disk before an operation returns.
@@ -481,7 +489,7 @@ class QueueFile internal constructor(
      * The iterator may throw an unchecked [IOException] during [Iterator.next]
      * or [Iterator.remove].
      */
-    operator fun iterator(): ObjectQueue.Iterator<ByteArray?> {
+    operator fun iterator(): ObjectQueue.Iterator<ByteArray> {
         return ElementIterator()
     }
 
@@ -699,8 +707,7 @@ class QueueFile internal constructor(
         }
     }
 
-    private inner class ElementIterator() :
-        ObjectQueue.Iterator<ByteArray?> {
+    private inner class ElementIterator : ObjectQueue.Iterator<ByteArray> {
         /**
          * Index of element to be returned by subsequent call to next.
          */

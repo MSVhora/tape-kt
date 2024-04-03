@@ -1,4 +1,5 @@
 // Copyright 2012 Square, Inc.
+// Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
 package io.github.msvhora.tape
 
 import io.github.msvhora.tape.QueueTestUtils.Companion.EMPTY_SERIALIZED_QUEUE
@@ -18,6 +19,11 @@ import java.io.File
 import java.io.IOException
 import java.io.OutputStream
 
+/**
+ * This code is migrated from Java to Kotlin with its original logic intact.
+ *
+ * @author Murtuza Vhora (murtazavhora@gmail.com)
+ */
 @RunWith(JUnit4::class)
 class QueueFileLoadingTest {
     private var testFile: File? = null

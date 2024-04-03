@@ -1,4 +1,5 @@
 // Copyright 2011 Square, Inc.
+// Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
 package io.github.msvhora.tape
 
 import java.io.Closeable
@@ -7,6 +8,11 @@ import java.io.OutputStream
 import java.util.Collections
 import kotlin.math.min
 
+/**
+ * This code is migrated from Java to Kotlin with its original logic intact.
+ *
+ * @author Murtuza Vhora (murtazavhora@gmail.com)
+ */
 /**
  * A queue of objects.
  */

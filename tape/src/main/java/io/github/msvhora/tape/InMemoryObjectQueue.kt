@@ -1,5 +1,5 @@
 // Copyright 2012 Square, Inc.
-// Copyright 2024,
+// Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
 @file:Suppress("KDocUnresolvedReference")
 
 package io.github.msvhora.tape
@@ -8,6 +8,11 @@ import java.util.ArrayDeque
 import java.util.Collections
 import java.util.Deque
 
+/**
+ * This code is migrated from Java to Kotlin with its original logic intact.
+ *
+ * @author Murtuza Vhora (murtazavhora@gmail.com)
+ */
 internal class InMemoryObjectQueue<T> : ObjectQueue<T> {
     private val entries: Deque<T>
 

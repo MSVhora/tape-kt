@@ -1,4 +1,5 @@
 // Copyright 2012 Square, Inc.
+// Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
 @file:Suppress("KDocUnresolvedReference")
 
 package io.github.msvhora.tape
@@ -8,6 +9,12 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
+/**
+ * This code is migrated from Java to Kotlin with its original logic intact.
+ * Suspend functionality is added to support Kotlin coroutines.
+ *
+ * @author Murtuza Vhora (murtazavhora@gmail.com)
+ */
 internal class FileObjectQueue<T>(
     queueFile: QueueFile,
     converter: ObjectQueue.Converter<T>,
@@ -107,7 +114,7 @@ internal class FileObjectQueue<T>(
             get() = buf
     }
 
-    private inner class QueueFileIterator(val iterator: ObjectQueue.Iterator<ByteArray?>) :
+    private inner class QueueFileIterator(val iterator: ObjectQueue.Iterator<ByteArray>) :
         ObjectQueue.Iterator<T> {
         override operator fun hasNext(): Boolean {
             return iterator.hasNext()
@@ -117,7 +124,7 @@ internal class FileObjectQueue<T>(
         override operator fun next(): T {
             val data = iterator.next()
             return try {
-                converter.from(data)
+                converter.from(data) ?: throw IOException()
             } catch (e: IOException) {
                 throw e
             }

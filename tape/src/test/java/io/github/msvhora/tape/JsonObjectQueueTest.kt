@@ -1,3 +1,4 @@
+// Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
 package io.github.msvhora.tape
 
 /**

@@ -1,4 +1,5 @@
 // Copyright 2012 Square, Inc.
+// Copyright 2024, Murtuza Vhora<murtazavhora@gmail.com>
 package io.github.msvhora.tape
 
 import okio.buffer
@@ -8,6 +9,11 @@ import org.junit.Assert
 import java.io.File
 import java.io.IOException
 
+/**
+ * This code is migrated from Java to Kotlin with its original logic intact.
+ *
+ * @author Murtuza Vhora (murtazavhora@gmail.com)
+ */
 internal class QueueTestUtils private constructor() {
     init {
         throw AssertionError("No instances.")
