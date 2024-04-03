@@ -165,7 +165,7 @@ class QueueFileCoroutineTest(
 
         @JvmStatic
         @Parameterized.Parameters(name = "{0}")
-        public fun parameters(): List<Array<Any>> {
+        fun parameters(): List<Array<Any>> {
             return listOf(arrayOf("Legacy", true, 16), arrayOf("Versioned", false, 32))
         }
     }

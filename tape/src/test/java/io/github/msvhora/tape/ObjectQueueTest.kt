@@ -22,7 +22,7 @@ class ObjectQueueTest {
 
     @Burst
     var factory: QueueFactory? = null
-    private var queue: ObjectQueue<String?>? = null
+    private var queue: ObjectQueue<String>? = null
 
     @Before
     @Throws(IOException::class)
@@ -102,9 +102,7 @@ class ObjectQueueTest {
         val saw: MutableList<String> = ArrayList()
         queue?.let {
             for (pojo in it) {
-                pojo?.let { str ->
-                    saw.add(str)
-                }
+                saw.add(pojo)
             }
         }
         assertThat(saw).containsExactly("one", "two", "three")
@@ -114,7 +112,7 @@ class ObjectQueueTest {
     @Throws(IOException::class)
     fun testIteratorNextThrowsWhenEmpty() = runTest {
         queue?.clear()
-        val iterator: ObjectQueue.Iterator<String?>? = queue?.iterator()
+        val iterator = queue?.iterator()
         try {
             iterator?.next()
             Assert.fail()
@@ -125,7 +123,7 @@ class ObjectQueueTest {
     @Test
     @Throws(IOException::class)
     fun testIteratorNextThrowsWhenExhausted() {
-        val iterator: ObjectQueue.Iterator<String?>? = queue?.iterator()
+        val iterator = queue?.iterator()
         iterator?.next()
         iterator?.next()
         iterator?.next()
@@ -139,7 +137,7 @@ class ObjectQueueTest {
     @Test
     @Throws(IOException::class)
     fun testIteratorRemove() = runTest {
-        val iterator: ObjectQueue.Iterator<String?>? = queue?.iterator()
+        val iterator = queue?.iterator()
         iterator?.next()
         iterator?.remove()
         assertThat(queue?.asList()).containsExactly("two", "three")
@@ -254,13 +252,13 @@ class ObjectQueueTest {
         val parent = folder.getRoot()
         val file = File(parent, "object-queue")
         val queueFile: QueueFile = QueueFile.Builder(file).build()
-        val queue = ObjectQueue.create(queueFile, object : ObjectQueue.Converter<Any?> {
+        val queue = ObjectQueue.create(queueFile, object : ObjectQueue.Converter<Any> {
             @Throws(IOException::class)
-            override fun from(source: ByteArray?): String {
+            override fun from(source: ByteArray): String? {
                 throw IOException()
             }
 
-            override fun toStream(value: Any?, sink: OutputStream?) {}
+            override fun toStream(value: Any, sink: OutputStream) {}
         })
         queue.add(Any())
         val iterator = queue.iterator()
@@ -298,14 +296,14 @@ class ObjectQueueTest {
         ): ObjectQueue<T>?
     }
 
-    internal class StringConverter : ObjectQueue.Converter<String?> {
+    internal class StringConverter : ObjectQueue.Converter<String> {
         @Throws(IOException::class)
-        override fun from(source: ByteArray?): String {
-            return String(source!!, charset("UTF-8"))
+        override fun from(source: ByteArray): String {
+            return String(source, charset("UTF-8"))
         }
 
-        override fun toStream(value: String?, sink: OutputStream?) {
-            value?.toByteArray(charset("UTF-8"))?.let { sink?.write(it) }
+        override fun toStream(value: String, sink: OutputStream) {
+            value.toByteArray(charset("UTF-8")).let { sink.write(it) }
         }
     }
 }

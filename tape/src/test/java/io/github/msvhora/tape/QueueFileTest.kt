@@ -288,7 +288,7 @@ class QueueFileTest(
         val bigBoy = ByteArray(7000)
         var i = 0
         while (i < 7000) {
-            System.arraycopy(values[100], 0, bigBoy, i, values[100]!!.size)
+            System.arraycopy(values[100]!!, 0, bigBoy, i, values[100]!!.size)
             i += 100
         }
         val queue: QueueFile = newQueueFile()
@@ -988,7 +988,7 @@ class QueueFileTest(
          * Takes up 33401 bytes in the queue (N*(N+1)/2+4*N). Picked 254 instead of 255 so that the number
          * of bytes isn't a multiple of 4.
          */
-        private val N = 254
+        private const val N = 254
         private val values = arrayOfNulls<ByteArray>(N)
 
         init {
@@ -1002,7 +1002,7 @@ class QueueFileTest(
 
         @JvmStatic
         @Parameterized.Parameters(name = "{0}")
-        public fun parameters(): List<Array<Any>> {
+        fun parameters(): List<Array<Any>> {
             return listOf(arrayOf("Legacy", true, 16), arrayOf("Versioned", false, 32))
         }
     }

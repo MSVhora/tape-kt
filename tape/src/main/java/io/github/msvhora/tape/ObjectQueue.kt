@@ -103,13 +103,13 @@ interface ObjectQueue<T> : Closeable {
          * Converts bytes to an object.
          */
         @Throws(IOException::class)
-        fun from(source: ByteArray?): T
+        fun from(source: ByteArray): T?
 
         /**
          * Converts `value` to bytes written to the specified stream.
          */
         @Throws(IOException::class)
-        fun toStream(value: T, sink: OutputStream?)
+        fun toStream(value: T, sink: OutputStream)
     }
 
     interface Iterator<T> {

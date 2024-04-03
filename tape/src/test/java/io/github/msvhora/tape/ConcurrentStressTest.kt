@@ -29,7 +29,7 @@ class ConcurrentStressTest {
     @Rule
     var folder = TemporaryFolder()
 
-    private var queue: ObjectQueue<JsonData?>? = null
+    private var queue: ObjectQueue<JsonData>? = null
 
     @Before
     @Throws(IOException::class)
@@ -126,32 +126,29 @@ class ConcurrentStressTest {
         }
     }
 
-    internal class JsonConverter : ObjectQueue.Converter<JsonData?> {
+    internal class JsonConverter : ObjectQueue.Converter<JsonData> {
         private val json = Json
 
         @Throws(IOException::class)
-        override fun from(source: ByteArray?): JsonData? {
-            return source?.let {
-                try {
-                    json
-                        .decodeFromString(
-                            deserializer = JsonData.serializer(),
-                            string = it.decodeToString()
-                        )
-                } catch (e: Exception) {
-                    null
-                }
+        override fun from(source: ByteArray): JsonData? {
+            return try {
+                json
+                    .decodeFromString(
+                        deserializer = JsonData.serializer(),
+                        string = source.decodeToString()
+                    )
+            } catch (e: Exception) {
+                null
             }
         }
 
-        override fun toStream(value: JsonData?, sink: OutputStream?) {
-            val jsonString = value?.let {
-                json.encodeToString(
+        override fun toStream(value: JsonData, sink: OutputStream) {
+            val jsonString = json
+                .encodeToString(
                     serializer = JsonData.serializer(),
-                    value = it
+                    value = value
                 )
-            }
-            jsonString?.toByteArray(charset("UTF-8"))?.let { sink?.write(it) }
+            jsonString.toByteArray(charset("UTF-8")).let { sink.write(it) }
         }
     }
 }

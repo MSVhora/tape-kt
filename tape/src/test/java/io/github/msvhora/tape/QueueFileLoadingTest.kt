@@ -88,18 +88,17 @@ class QueueFileLoadingTest {
         val qf: QueueFile = QueueFile.Builder(testFile).build()
 
         // Should throw an exception.
-        val queue: FileObjectQueue<String?> =
-            FileObjectQueue(qf, object : ObjectQueue.Converter<String?> {
-                @Throws(IOException::class)
-                override fun from(source: ByteArray?): String? {
-                    return null
-                }
+        val queue = FileObjectQueue(qf, object : ObjectQueue.Converter<String> {
+            @Throws(IOException::class)
+            override fun from(source: ByteArray): String? {
+                return null
+            }
 
-                @Throws(IOException::class)
-                override fun toStream(value: String?, sink: OutputStream?) {
-                    throw IOException("fake Permission denied")
-                }
-            })
+            @Throws(IOException::class)
+            override fun toStream(value: String, sink: OutputStream) {
+                throw IOException("fake Permission denied")
+            }
+        })
 
         // Should throw an exception.
         queue.use {

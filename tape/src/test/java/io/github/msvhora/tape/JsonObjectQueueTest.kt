@@ -39,7 +39,7 @@ class JsonObjectQueueTest {
 
     @Burst
     var factory: QueueFactory? = null
-    private var queue: ObjectQueue<JsonData?>? = null
+    private var queue: ObjectQueue<JsonData>? = null
 
     @Before
     @Throws(IOException::class)
@@ -127,9 +127,7 @@ class JsonObjectQueueTest {
         val saw: MutableList<JsonData> = ArrayList()
         queue?.let {
             for (pojo in it) {
-                pojo?.let { data ->
-                    saw.add(data)
-                }
+                saw.add(pojo)
             }
         }
         assertThat(saw).containsExactly(JsonData("one"), JsonData("two"), JsonData("three"))
@@ -279,13 +277,13 @@ class JsonObjectQueueTest {
         val parent = folder.getRoot()
         val file = File(parent, "object-queue")
         val queueFile: QueueFile = QueueFile.Builder(file).build()
-        val queue = ObjectQueue.create(queueFile, object : ObjectQueue.Converter<Any?> {
+        val queue = ObjectQueue.create(queueFile, object : ObjectQueue.Converter<Any> {
             @Throws(IOException::class)
-            override fun from(source: ByteArray?): String {
+            override fun from(source: ByteArray): String {
                 throw IOException()
             }
 
-            override fun toStream(value: Any?, sink: OutputStream?) {}
+            override fun toStream(value: Any, sink: OutputStream) {}
         })
         queue.add(Any())
         val iterator = queue.iterator()
@@ -415,32 +413,29 @@ class JsonObjectQueueTest {
         }
     }
 
-    internal class JsonConverter : ObjectQueue.Converter<JsonData?> {
+    internal class JsonConverter : ObjectQueue.Converter<JsonData> {
         private val json = Json
 
         @Throws(IOException::class)
-        override fun from(source: ByteArray?): JsonData? {
-            return source?.let {
-                try {
-                    json
-                        .decodeFromString(
-                            deserializer = JsonData.serializer(),
-                            string = it.decodeToString()
-                        )
-                } catch (e: Exception) {
-                    null
-                }
+        override fun from(source: ByteArray): JsonData? {
+            return try {
+                json
+                    .decodeFromString(
+                        deserializer = JsonData.serializer(),
+                        string = source.decodeToString()
+                    )
+            } catch (e: Exception) {
+                null
             }
         }
 
-        override fun toStream(value: JsonData?, sink: OutputStream?) {
-            val jsonString = value?.let {
-                json.encodeToString(
+        override fun toStream(value: JsonData, sink: OutputStream) {
+            val jsonString = json
+                .encodeToString(
                     serializer = JsonData.serializer(),
-                    value = it
+                    value = value
                 )
-            }
-            jsonString?.toByteArray(charset("UTF-8"))?.let { sink?.write(it) }
+            jsonString.toByteArray(charset("UTF-8")).let { sink.write(it) }
         }
     }
 }
