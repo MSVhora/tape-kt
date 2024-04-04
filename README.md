@@ -17,12 +17,12 @@ Kotlin DSL:
         repositories {
             google()
             mavenCentral()
-            maven { url 'https://jitpack.io' }
+            maven("https://jitpack.io")
         }
     }
 
     dependencies {
-        implementation("com.github.MSVhora:tape-kt:1.0.0")
+        implementation("com.github.MSVhora:tape-kt:1.0.4")
     }
 
 ```
@@ -39,7 +39,7 @@ Groovy DSL:
     }
             
     dependencies {
-        implementation 'com.github.MSVhora:tape-kt:1.0.0'
+        implementation 'com.github.MSVhora:tape-kt:1.0.4'
     }
 ```
 
@@ -56,7 +56,7 @@ maven
 	<dependency>
 	    <groupId>com.github.MSVhora</groupId>
 	    <artifactId>tape-kt</artifactId>
-	    <version>1.0.0</version>
+	    <version>1.0.4</version>
 	</dependency>
 ```
 
