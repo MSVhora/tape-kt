@@ -77,6 +77,8 @@ internal class InMemoryObjectQueue<T> : ObjectQueue<T> {
         closed = true
     }
 
+    override fun isClosed(): Boolean = closed
+
     override fun toString(): String {
         return ("InMemoryObjectQueue{"
                 + "size=" + entries.size

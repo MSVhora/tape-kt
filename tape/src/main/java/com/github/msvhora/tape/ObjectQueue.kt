@@ -100,6 +100,11 @@ interface ObjectQueue<T> : Closeable {
     }
 
     /**
+     * Checks whether queue is closed or not
+     */
+    fun isClosed(): Boolean
+
+    /**
      * Convert a byte stream to and from a concrete type.
      *
      * @param <T> Object type.

@@ -68,8 +68,7 @@ class QueueFile internal constructor(
     raf: RandomAccessFile,
     zero: Boolean,
     forceLegacy: Boolean,
-) :
-    Closeable {
+) : Closeable {
     /**
      * The underlying file. Uses a ring buffer to store entries. Designed so that a modification
      * isn't committed or visible until we write the header. The header is much smaller than a
@@ -521,7 +520,14 @@ class QueueFile internal constructor(
     )
     suspend fun remove(n: Int = 1) {
         mutex.lock()
-        require(n >= 0) { "Cannot remove negative ($n) number of elements." }
+        if (closed) {
+            mutex.unlock()
+            throw IllegalStateException("closed")
+        }
+        if (n < 0) {
+            mutex.unlock()
+            throw IllegalArgumentException("Cannot remove negative ($n) number of elements.")
+        }
         if (n == 0) {
             mutex.unlock()
             return
@@ -583,7 +589,7 @@ class QueueFile internal constructor(
     )
     suspend fun clear() {
         mutex.withLock {
-            if (closed) throw IllegalStateException("closed")
+            check(!closed) { "closed" }
 
             // Commit the header.
             writeHeader(INITIAL_LENGTH.toLong(), 0, 0, 0)
@@ -613,6 +619,8 @@ class QueueFile internal constructor(
         closed = true
         raf.close()
     }
+
+    fun isClosed() = closed
 
     override fun toString(): String {
         return ("QueueFile{"
@@ -719,13 +727,13 @@ class QueueFile internal constructor(
         private var nextElementPosition: Long = first.position
 
         override operator fun hasNext(): Boolean {
-            if (closed) throw IllegalStateException("closed")
+            check(!closed) { "closed" }
             return nextElementIndex != elementCount
         }
 
         @Throws(IOException::class)
         override operator fun next(): ByteArray {
-            if (closed) throw IllegalStateException("closed")
+            check(!closed) { "closed" }
             if (isEmpty) throw NoSuchElementException()
             if (nextElementIndex >= elementCount) throw NoSuchElementException()
             return try {
@@ -750,6 +758,7 @@ class QueueFile internal constructor(
 
         @Throws(IOException::class)
         override suspend fun remove() {
+            check(!closed) { "closed" }
             if (isEmpty) throw NoSuchElementException()
             if (nextElementIndex != 1) {
                 throw UnsupportedOperationException("Removal is only permitted from the head.")

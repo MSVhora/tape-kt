@@ -81,6 +81,8 @@ internal class FileObjectQueue<T>(
         queueFile.close()
     }
 
+    override fun isClosed() = queueFile.isClosed()
+
     /**
      * Returns an iterator over entries in this queue.
      *
