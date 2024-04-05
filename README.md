@@ -22,7 +22,7 @@ Kotlin DSL:
     }
 
     dependencies {
-        implementation("com.github.MSVhora:tape-kt:1.0.4")
+        implementation("com.github.MSVhora:tape-kt:1.0.5")
     }
 
 ```
@@ -39,7 +39,7 @@ Groovy DSL:
     }
             
     dependencies {
-        implementation 'com.github.MSVhora:tape-kt:1.0.4'
+        implementation 'com.github.MSVhora:tape-kt:1.0.5'
     }
 ```
 
@@ -56,7 +56,7 @@ maven
 	<dependency>
 	    <groupId>com.github.MSVhora</groupId>
 	    <artifactId>tape-kt</artifactId>
-	    <version>1.0.4</version>
+	    <version>1.0.5</version>
 	</dependency>
 ```
 
